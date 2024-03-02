@@ -1,8 +1,8 @@
 "use client"
 import { NavLink, BrowserRouter, Route, Routes } from "react-router-dom";
-import Navigate from "./components/navigation";
-import { Page1 } from "./components/page1";
-import { Page2 } from "./components/page2";
+//import Navigate from "./components/navigation";
+//import { Page1 } from "./components/page1";
+//import { Page2 } from "./components/page2";
 import { NoteCard } from "./components/notecards";
 import React from "react";
 
