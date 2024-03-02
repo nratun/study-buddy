@@ -11,23 +11,41 @@
 @media (prefers-color-scheme: dark) {
   :root {
     --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
+    --background-start-rgb: 255, 255, 255;
+    --background-end-rgb: 255, 255, 255;
   }
 }
 
-body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
+.cards {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  font-family: mono;
+  padding: 30px;
 }
 
-@layer utilities {
-  .text-balance {
-    text-wrap: balance;
+#flashcard-container {
+  text-align: center;
+}
+
+.card {
+  border: 2px solid #007bff;
+  padding: 20px;
+  width: calc(33.33% - 20px);
+  height: 200px;
+  margin: 10px auto;
+  border-radius: 5px;
+}
+
+@media (max-width: 1000px) {
+  .card {
+    width: calc(50% - 20px); /* Set width to half of the container minus margins on smaller screens */
   }
 }
+
+@media (max-width: 600px) {
+  .card {
+    width: calc(100% - 20px); /* Set width to full width minus margins on even smaller screens */
+  }
+}
+
