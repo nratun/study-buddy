@@ -43,6 +43,10 @@ export const StudyCards: React.FC<StudyCardsProps> = ({ cards }) => {
         
         // Update the feedback for the current card
         cards[currCardInd].feedback = type;
+        setFeedbackCounts(prevCounts => ({
+          ...prevCounts,
+          [type]: prevCounts[type] + 1,
+      }));
 
         // Move to the next card
         nextCard();
@@ -75,19 +79,19 @@ export const StudyCards: React.FC<StudyCardsProps> = ({ cards }) => {
                   <div>
                     <Button 
                       onClick={() => handleFeedback('good')} 
-                      disabled={currCard.feedback !== null}
+                      disabled={currCard.feedback === 'good' || currCard.feedback === 'unsure' || currCard.feedback === 'bad'}
                     >
                       Good
                     </Button>
                     <Button 
                       onClick={() => handleFeedback('unsure')} 
-                      disabled={currCard.feedback !== null}
+                      disabled={currCard.feedback === 'good' || currCard.feedback === 'unsure' || currCard.feedback === 'bad'}
                     >
                       Unsure
                     </Button>
                     <Button 
                       onClick={() => handleFeedback('bad')} 
-                      disabled={currCard.feedback !== null}
+                      disabled={currCard.feedback === 'good' || currCard.feedback === 'unsure' || currCard.feedback === 'bad'}
                     >
                       Bad
                     </Button>
