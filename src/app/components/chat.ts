@@ -15,7 +15,7 @@ export type GptResponse = FailedGptResponse | SuccessfulGptResponse;
 
 export async function runGPTQuery(query: string): Promise<GptResponse> {
   const apiKey = process.env.OPEN_API_KEY;
-  console.log(apiKey);
+  console.log(apiKey); //Testing
   if (!apiKey) {
     throw new Error('OpenAI API key not found in environment variables.');
   }
