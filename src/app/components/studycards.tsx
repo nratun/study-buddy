@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Button } from "react-bootstrap";
 import styles from '../studystyles.module.css';
+import { runGPTQuery } from "./chat";
 
 interface StudyCardsProps {
   cards: { question: string; answer: string; feedback?: FeedbackType | null }[];
@@ -9,21 +10,23 @@ interface StudyCardsProps {
 type FeedbackType = 'good' | 'unsure' | 'bad';
 
 export const StudyCards: React.FC<StudyCardsProps> = ({ cards }) => {
-    const [currCardInd, setCurrCardInd] = useState<number>(0);
-    const [visible, setVisible] = useState<boolean>(false);
-    const [results, setResult] = useState<boolean>(false);
-    const [feedbackCounts, setFeedbackCounts] = useState<{ good: number; unsure: number; bad: number }>({ good: 0, unsure: 0, bad: 0 });
+  const [currCardInd, setCurrCardInd] = useState<number>(0);
+  const [visible, setVisible] = useState<boolean>(false);
+  const [results, setResult] = useState<boolean>(false);
+  const [feedbackCounts, setFeedbackCounts] = useState<{ good: number; unsure: number; bad: number }>({ good: 0, unsure: 0, bad: 0 });
+  const [response, setResponse] = useState<string>(''); // Moved to the top
+  const [strCards, setStrCards] = useState<string>('');
 
-    useEffect(() => {
-        // Count the occurrences of each feedback type
-        const counts = cards.reduce((acc, card) => {
-            if (card.feedback) {
-                acc[card.feedback]++;
-            }
-            return acc;
-        }, { good: 0, unsure: 0, bad: 0 });
-        setFeedbackCounts(counts);
-    }, [cards]);
+  useEffect(() => {
+      // Count the occurrences of each feedback type
+      const counts = cards.reduce((acc, card) => {
+          if (card.feedback) {
+              acc[card.feedback]++;
+          }
+          return acc;
+      }, { good: 0, unsure: 0, bad: 0 });
+      setFeedbackCounts(counts);
+  }, [cards]);
 
     function changeVisibility(): void {
       setVisible(!visible);
@@ -66,6 +69,22 @@ export const StudyCards: React.FC<StudyCardsProps> = ({ cards }) => {
     if (cards.length === 0) {
       return <div>No cards available for study.</div>;
     }
+
+  const handleSubmit = async (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    event.preventDefault(); // Prevent default button behavior
+    try {
+      const cardsAsString = "[" + cards.map(card => `{Question: ${card.question}, Answer: ${card.answer}, Feedback: null`).join(', ') + "]";
+      setStrCards(cardsAsString);
+      const result = await runGPTQuery("Generate 5 sets of questions and answers related to the same topic but NOT the same content as the following question and answer pairs, and put them in array of cards like so: " + cardsAsString); // Call the runGPTQuery function with the desired question
+      if (result.success) {
+        setResponse(result.message); // Update state with the response message
+      } else {
+        console.error('Failed with finish_reason:', result.finish_reason);
+      }
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  };
 
     const currCard = cards[currCardInd];
     const begin = currCardInd === 0;
@@ -128,6 +147,13 @@ export const StudyCards: React.FC<StudyCardsProps> = ({ cards }) => {
                       Next
                   </button>
                   <Button onClick={changeResultVisibility}>Finish Studying</Button>
+                  <button onClick={(event) => handleSubmit(event)}>Generate Similar</button>
+                  {/* Display the response */}
+                  <div>
+                    <p>Response:</p>
+                    <p>{response}</p>
+                    <div>Stringified cards: {strCards}</div>
+                  </div>     
               </div>
           )}
       </div>

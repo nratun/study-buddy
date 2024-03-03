@@ -23,7 +23,7 @@ export async function runGPTQuery(query: string): Promise<GptResponse> {
     }, {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer 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`,
+        Authorization: `Bearer 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`,
       },
     });
 
