@@ -8,7 +8,7 @@ export default function Home(): JSX.Element {
   return (
     <main>
       <div className="container">
-        <div className="header">My Flashcards</div>
+        <div className="header">STUDY BUDDY</div>
         
       </div>
       <NoteCard />
