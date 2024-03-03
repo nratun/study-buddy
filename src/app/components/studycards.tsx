@@ -157,7 +157,7 @@ export const StudyCards: React.FC<StudyCardsProps> = ({ cards, setCards }) => {
                       Next
                   </button>
                   <Button onClick={changeResultVisibility}>Finish Studying</Button>
-                  <button onClick={(event) => handleSubmit(event)}>Generate Similar</button>
+                  <Button onClick={(event) => handleSubmit(event)}>Generate Similar</Button>
                   {/* Display the response */}
                   <div>
                     <p>Generated Questions:</p>

@@ -33,6 +33,20 @@
   border-radius: 5px;
 }
 
+.header {
+  font-size: 2em;
+  font-weight: bold;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: #333; 
+}
+.container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 10vh;
+}
+
 @media (max-width: 1000px) {
   .card {
     width: calc(50% - 20px); /* Set width to half of the container minus margins on smaller screens */
