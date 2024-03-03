@@ -112,7 +112,7 @@ export function NoteCard(): JSX.Element {
           </div>
         </div>
       ))}
-      <StudyCards cards={cards} />
+      <StudyCards cards={cards} setCards={setCards} />
     </div>
   );
 }

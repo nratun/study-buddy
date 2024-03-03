@@ -5,11 +5,12 @@ import { runGPTQuery } from "./chat";
 
 interface StudyCardsProps {
   cards: { question: string; answer: string; feedback?: FeedbackType | null }[];
+  setCards: React.Dispatch<React.SetStateAction<{ question: string; answer: string; editMode: boolean }[]>>;
 }
 
 type FeedbackType = 'good' | 'unsure' | 'bad';
 
-export const StudyCards: React.FC<StudyCardsProps> = ({ cards }) => {
+export const StudyCards: React.FC<StudyCardsProps> = ({ cards, setCards }) => {
   const [currCardInd, setCurrCardInd] = useState<number>(0);
   const [visible, setVisible] = useState<boolean>(false);
   const [results, setResult] = useState<boolean>(false);
@@ -78,6 +79,15 @@ export const StudyCards: React.FC<StudyCardsProps> = ({ cards }) => {
       const result = await runGPTQuery("Generate 5 sets of questions and answers related to the same topic but NOT the same content as the following question and answer pairs, and put them in array of cards like so: " + cardsAsString); // Call the runGPTQuery function with the desired question
       if (result.success) {
         setResponse(result.message); // Update state with the response message
+        const generatedCards = JSON.parse(result.message);
+      // Convert the generated cards to the desired format
+      const newCards = generatedCards.map((item: any) => ({
+        question: item.Question,
+        answer: item.Answer,
+        feedback: item.Feedback
+      }));
+      // Add the generated cards to the existing list of cards
+      setCards(cards => [...cards, ...newCards]);
       } else {
         console.error('Failed with finish_reason:', result.finish_reason);
       }
@@ -150,9 +160,8 @@ export const StudyCards: React.FC<StudyCardsProps> = ({ cards }) => {
                   <button onClick={(event) => handleSubmit(event)}>Generate Similar</button>
                   {/* Display the response */}
                   <div>
-                    <p>Response:</p>
+                    <p>Generated Questions:</p>
                     <p>{response}</p>
-                    <div>Stringified cards: {strCards}</div>
                   </div>     
               </div>
           )}

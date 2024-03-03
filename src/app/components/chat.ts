@@ -14,11 +14,6 @@ interface SuccessfulGptResponse {
 export type GptResponse = FailedGptResponse | SuccessfulGptResponse;
 
 export async function runGPTQuery(query: string): Promise<GptResponse> {
-  const apiKey = process.env.OPEN_API_KEY;
-  console.log(apiKey); //Testing
-  if (!apiKey) {
-    throw new Error('OpenAI API key not found in environment variables.');
-  }
   const { data } = await axios.post(
     'https://api.openai.com/v1/chat/completions', {
       model: 'gpt-3.5-turbo',
@@ -29,7 +24,7 @@ export async function runGPTQuery(query: string): Promise<GptResponse> {
     }, {
       headers: {
         'Content-Type': 'application/json',
-          Authorization: `Bearer ${apiKey}`,
+          Authorization: `Bearer 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`,
       },
     });
 
