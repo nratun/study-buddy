@@ -30,7 +30,6 @@ export default function Home(): JSX.Element {
       <div className="flex-col items-center justify-between p-20">
         <div className="font-mono">My Flashcards</div>
         <NoteCard />
-        {/* Form for user input */}
         <form onSubmit={handleSubmit}>
           <input
             type="text"
