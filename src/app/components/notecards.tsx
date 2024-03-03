@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Form, Button } from "react-bootstrap";
 import '../cardstyles.css';
+import { StudyCards } from './studycards';
 
 export function NoteCard(): JSX.Element {
   const [question, setQuestion] = useState('');
@@ -111,6 +112,7 @@ export function NoteCard(): JSX.Element {
           </div>
         </div>
       ))}
+      <StudyCards cards={cards} />
     </div>
   );
 }

@@ -4,6 +4,7 @@ import { NavLink, BrowserRouter, Route, Routes } from "react-router-dom";
 //import { Page1 } from "./components/page1";
 //import { Page2 } from "./components/page2";
 import { NoteCard } from "./components/notecards";
+import { StudyCards } from "./components/studycards";
 import React from "react";
 
 export default function Home(): JSX.Element {
