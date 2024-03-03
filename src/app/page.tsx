@@ -1,28 +1,52 @@
 "use client"
-import { NavLink, BrowserRouter, Route, Routes } from "react-router-dom";
-//import Navigate from "./components/navigation";
-//import { Page1 } from "./components/page1";
-//import { Page2 } from "./components/page2";
+import React, { useState } from 'react';
 import { NoteCard } from "./components/notecards";
-import { StudyCards } from "./components/studycards";
-import React from "react";
+import { runGPTQuery } from "./components/chat";
 
 export default function Home(): JSX.Element {
+  const [input, setInput] = useState('');
+  const [response, setResponse] = useState<string>('');
+
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setInput(event.target.value);
+  };
+
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault(); // Prevent default form submission behavior
+    try {
+      const result = await runGPTQuery(input); // Call the runGPTQuery function with user input
+      if (result.success) {
+        setResponse(result.message); // Update state with the response message
+      } else {
+        console.error('Failed with finish_reason:', result.finish_reason);
+      }
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  };
+
   return (
     <main>
-        <div className="flex-col items-center justify-between p-20">
-          <div className="font-mono">My Flashcards</div>
-            <NoteCard />
+      <div className="flex-col items-center justify-between p-20">
+        <div className="font-mono">My Flashcards</div>
+        <NoteCard />
+        {/* Form for user input */}
+        <form onSubmit={handleSubmit}>
+          <input
+            type="text"
+            value={input}
+            onChange={handleInputChange}
+            placeholder="Enter your query"
+          />
+          <button type="submit">Submit</button>
+        </form>
+
+        {/* Display the response */}
+        <div>
+          <p>Response:</p>
+          <p>{response}</p>
         </div>
+      </div>
     </main>
   );
 }
-
-
-
-{/* <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      hii
-      <div className="z-10 max-w-5xl w-full items-center justify-between font-mono text-sm lg:flex">
-        hello
-      </div>
-    </main> */}

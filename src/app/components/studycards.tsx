@@ -11,6 +11,7 @@ type FeedbackType = 'good' | 'unsure' | 'bad';
 export const StudyCards: React.FC<StudyCardsProps> = ({ cards }) => {
     const [currCardInd, setCurrCardInd] = useState<number>(0);
     const [visible, setVisible] = useState<boolean>(false);
+    const [results, setResult] = useState<boolean>(false);
     const [feedbackCounts, setFeedbackCounts] = useState<{ good: number; unsure: number; bad: number }>({ good: 0, unsure: 0, bad: 0 });
 
     useEffect(() => {
@@ -28,6 +29,14 @@ export const StudyCards: React.FC<StudyCardsProps> = ({ cards }) => {
       setVisible(!visible);
     }
 
+    const resetFeedback = () => {
+        setFeedbackCounts({ good: 0, unsure: 0, bad: 0 });
+    };
+
+    function changeResultVisibility(): void {
+      setResult(!results);
+    }
+
     const nextCard = () => {
       setCurrCardInd((prevInd) => (prevInd + 1) % cards.length);
       setVisible(false);
@@ -37,6 +46,7 @@ export const StudyCards: React.FC<StudyCardsProps> = ({ cards }) => {
       setCurrCardInd((prevInd) => (prevInd - 1 + cards.length) % cards.length);
       setVisible(false);
     };
+
 
     const handleFeedback = (type: FeedbackType) => {
         if (cards[currCardInd].feedback) return; // If feedback already given, do nothing
@@ -63,51 +73,63 @@ export const StudyCards: React.FC<StudyCardsProps> = ({ cards }) => {
 
     return (
       <div className={styles["study-cards-container"]}>
-        <div className={styles["note-card-container"]}>
-          <button onClick={prevCard} disabled={begin}>Previous</button>
-          <div className={styles["note-card"]}>
-            <div>
-              <h3>Question:</h3>
-              <p>{currCard.question}</p>
-            </div>
-            <div className="show-answer-button">
-              <Button onClick={changeVisibility}>Reveal Answer</Button>
-              {visible && (
-                <div>
-                  <h3>Answer:</h3>
-                  <p>{currCard.answer}</p>
-                  <div>
-                    <Button 
-                      onClick={() => handleFeedback('good')} 
-                      disabled={currCard.feedback === 'good' || currCard.feedback === 'unsure' || currCard.feedback === 'bad'}
-                    >
-                      Good
-                    </Button>
-                    <Button 
-                      onClick={() => handleFeedback('unsure')} 
-                      disabled={currCard.feedback === 'good' || currCard.feedback === 'unsure' || currCard.feedback === 'bad'}
-                    >
-                      Unsure
-                    </Button>
-                    <Button 
-                      onClick={() => handleFeedback('bad')} 
-                      disabled={currCard.feedback === 'good' || currCard.feedback === 'unsure' || currCard.feedback === 'bad'}
-                    >
-                      Bad
-                    </Button>
+          {results ? (
+              <div>
+                  <h3>Feedback Counts:</h3>
+                  <p>Good: {feedbackCounts.good}</p>
+                  <p>Unsure: {feedbackCounts.unsure}</p>
+                  <p>Bad: {feedbackCounts.bad}</p>
+                  <Button onClick={resetFeedback}>Retry</Button>
+              </div>
+              
+          ) : (
+              <div className={styles["note-card-container"]}>
+                  <button onClick={prevCard} disabled={begin}>
+                      Previous
+                  </button>
+                  <div className={styles["note-card"]}>
+                      <div>
+                          <h3>Question:</h3>
+                          <p>{currCard.question}</p>
+                      </div>
+                      <div className="show-answer-button">
+                      <Button onClick={changeVisibility}>
+                                {visible ? 'Hide Answer' : 'Reveal Answer'}
+                            </Button>
+                          {visible && (
+                              <div>
+                                  <h3>Answer:</h3>
+                                  <p>{currCard.answer}</p>
+                                  <div>
+                                      <Button
+                                          onClick={() => handleFeedback('good')}
+                                          disabled={currCard.feedback === 'good' || currCard.feedback === 'unsure' || currCard.feedback === 'bad'}
+                                      >
+                                          Good
+                                      </Button>
+                                      <Button
+                                          onClick={() => handleFeedback('unsure')}
+                                          disabled={currCard.feedback === 'good' || currCard.feedback === 'unsure' || currCard.feedback === 'bad'}
+                                      >
+                                          Unsure
+                                      </Button>
+                                      <Button
+                                          onClick={() => handleFeedback('bad')}
+                                          disabled={currCard.feedback === 'good' || currCard.feedback === 'unsure' || currCard.feedback === 'bad'}
+                                      >
+                                          Bad
+                                      </Button>
+                                  </div>
+                              </div>
+                          )}
+                      </div>
                   </div>
-                </div>
-              )}
-            </div>
-          </div>
-          <button onClick={nextCard} disabled={end}>Next</button>
-        </div>
-        <div>
-            <h3>Feedback Counts:</h3>
-            <p>Good: {feedbackCounts.good}</p>
-            <p>Unsure: {feedbackCounts.unsure}</p>
-            <p>Bad: {feedbackCounts.bad}</p>
-        </div>
+                  <button onClick={nextCard} disabled={end}>
+                      Next
+                  </button>
+                  <Button onClick={changeResultVisibility}>Finish Studying</Button>
+              </div>
+          )}
       </div>
-    );
+  );
 };
